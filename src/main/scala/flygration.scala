@@ -1,3 +1,23 @@
+package flygration
+/**
+ * flygration package contains class necessary for using flywaydb, a popular database migration tool, with slick-migration-api. Common use-case will create a Flyway object and initialize it with a datasource and then customize some settings.
+ * If you are using the migration class files do not setLocations().
+ * <code>
+ * val f = new Flyway
+ * f.setDataSource(Settings.dbUrl, Settings.dbUser, Settings.dbPassword)
+ * f.setInitOnMigrate(true)
+ * f.setLocations()
+ * f.setResolvers(new SMAMigrationResolver(
+ *   FWMigration("1", Seq(
+ *     TableMigration(table1)
+ *       .addColumn(_.col1, "col1")
+ *       .addColumn(_.col2, "col2"),
+ *     SqlMigration("insert into table1 (col1, col2) values ('data1', 'data2')")
+ *   ))
+ * f.migrate
+ * </code>
+ */
+
 import java.sql.Connection
 //import java.sql.PreparedStatement
 import org.flywaydb.core.api._
