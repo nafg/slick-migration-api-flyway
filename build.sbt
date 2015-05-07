@@ -1,3 +1,4 @@
+scalaVersion := "2.11.6"
 
 libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.1.1"
 
