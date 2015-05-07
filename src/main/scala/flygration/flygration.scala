@@ -33,14 +33,14 @@ import org.flywaydb.core.Flyway
  *  }}}
  * 
  * (Note that we must use `setLocations()` in order to to avoid searching 
- * for migrations on in the default locations)
+ * for migrations in the default locations)
  */
 package object flygration {
   /** Provides a method to append [[VersionedMigration]]s to a [[Flyway]] object. */
   implicit class SlickMigrationFlywayAdapter(flyway: Flyway) {
     /** Appends the given [[VersionedMigration]]s to the wrapped [[Flyway]] object.
      *  This invokes the [[Flyway#setResolvers]] method in order to add the migrations
-     *  to any existing [[org.flywaydb.core.api.resolver.MigrationResolver]].
+     *  to any existing [[org.flywaydb.core.api.resolver.MigrationResolver]]s.
      *  In case other resolvers are needed, first set them, and only then invoke this
      *  method.
      */
