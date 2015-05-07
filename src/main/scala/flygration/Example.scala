@@ -1,11 +1,9 @@
 package flygration
 
-import org.flywaydb.core.Flyway
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.migration.api._
 import flygration._
-import scala.slick.jdbc.meta.MTable
-import org.flywaydb.core.internal.util.jdbc.DriverDataSource
+import org.flywaydb.core.Flyway
 
 /** An example usage of the `flygration` package. */
 object Example extends App {
