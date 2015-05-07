@@ -89,3 +89,8 @@ package object flygration {
 case class VersionedMigration(version: String, m: Migration, ms: Migration*) {
   val migrations = m +: ms
 }
+
+object VersionedMigration {
+  def apply(version: Int, m: Migration, ms: Migration*): VersionedMigration = 
+    VersionedMigration(version.toString, m, ms: _*)
+}
