@@ -86,11 +86,9 @@ package object flygration {
 }
 
 /** Wraps one or more [[scala.slick.migration.api.Migration]] objects with a version string. */
-case class VersionedMigration(version: String, m: Migration, ms: Migration*) {
-  val migrations = m +: ms
-}
+case class VersionedMigration(version: String, migrations: Migration*)
 
 object VersionedMigration {
-  def apply(version: Int, m: Migration, ms: Migration*): VersionedMigration = 
-    VersionedMigration(version.toString, m, ms: _*)
+  def apply(version: Int, migrations: Migration*): VersionedMigration = 
+    VersionedMigration(version.toString, migrations: _*)
 }
