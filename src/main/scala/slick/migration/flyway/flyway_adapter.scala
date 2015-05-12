@@ -42,7 +42,7 @@ import scala.slick.jdbc.JdbcBackend
  *  for example:
  *  {{{
  *  import scala.slick.migration.flyway._
- *  val m: Migration = sideEffectWithSession { implicit session => ... }
+ *  val m: Migration = sideEffect { implicit session => ... }
  *  }}}
  */
 package object flyway {
