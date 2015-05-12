@@ -1,12 +1,23 @@
 package scala.slick
 package migration
 
+import java.sql.Connection
+import org.flywaydb.core.api._
+import org.flywaydb.core.api.resolver._
+import scala.slick.migration.api._
+import scala.slick.jdbc.UnmanagedSession
+import scala.collection.JavaConverters._
+import org.flywaydb.core.Flyway
+import scala.slick.jdbc.JdbcBackend
+
 /** The `slick.migration.flyway` package is an adapter between the `Flyway` database migration tool,
  *  and the `slick-migration-api` library.
  *
  *  One can aggregate [[scala.slick.migration.api.Migration]]s into [[VersionedMigration]]
  *  objects and then pass them to `Flyway` as follows:
  *  {{{
+ *  import scala.slick.migration.flyway._
+ *
  *  val m1 = TableMigration(testTable)
  *    .create
  *    .addColumns(_.col1, _.col2)
@@ -26,40 +37,26 @@ package migration
  *
  *  (Note that we must use `setLocations()` in order to to avoid searching
  *  for migrations in the default locations)
- *  
- *  The package can also be used to apply general side effects on the database using
- *  `Flyway`. For example:
+ *
+ *  It is possible to convert general side effecting actions into a migration,
+ *  for example:
  *  {{{
- *  val m1: Connection => Unit = c => ...
- *  val m2: Connection => Unit = c => ...
- *  
- *  val migration = VersionedSideEffect.withConnection("1", m1, m2)
+ *  import scala.slick.migration.flyway._
+ *  val m: Migration = sideEffectWithSession { implicit session => ... }
  *  }}}
  */
-package object flyway // adding an object to have a central place for the package documentation
+package object flyway {
+  /** Converts a side effecting action that requires a session into a migration. */
+  def sideEffect(eff: => (JdbcBackend#Session => Unit)) = new Migration {
+    def apply()(implicit session: JdbcBackend#Session) = {
+      eff(session)
+    }
+  }
+}
 
 package flyway {
-  import java.sql.Connection
-  import org.flywaydb.core.api._
-  import org.flywaydb.core.api.resolver._
-  import scala.slick.migration.api._
-  import scala.slick.jdbc.UnmanagedSession
-  import scala.collection.JavaConverters._
-  import org.flywaydb.core.Flyway
-  import scala.slick.jdbc.JdbcBackend
-
-  /** A skeleton implementation of a custom migration. */
-  private[flyway] trait CustomResolvedMigration extends ResolvedMigration {
-    def version: String
-
-    def getChecksum = null
-    def getPhysicalLocation: String = "Custom code"
-    def getType: MigrationType = MigrationType.CUSTOM
-    def getVersion: MigrationVersion = MigrationVersion fromVersion version
-  }
-
   /** Wraps one or more [[scala.slick.migration.api.Migration]] objects with a version string. */
-  case class VersionedMigration(version: String, migrations: Migration*) extends CustomResolvedMigration {
+  case class VersionedMigration(version: String, migrations: Migration*) extends ResolvedMigration {
 
     def getDescription: String = {
       migrations.map {
@@ -78,35 +75,16 @@ package flyway {
       case m: SqlMigration => s"SqlMigration{${m.sql.mkString(";")};}"
       case _ => "<< slick-migration-api >>"
     }.mkString("\n")
+
+    def getChecksum = null
+    def getPhysicalLocation: String = "Custom code"
+    def getType: MigrationType = MigrationType.CUSTOM
+    def getVersion: MigrationVersion = MigrationVersion fromVersion version
   }
 
   object VersionedMigration {
     def apply(version: Int, migrations: Migration*): VersionedMigration =
       VersionedMigration(version.toString, migrations: _*)
-  }
-
-  /** Wraps a list of side effects on the database as a versioned action.
-   *  New instances should be constructed via the companion object.
-   */
-  class VersionedSideEffect private (val version: String, sideEffects: Seq[(Connection => Unit)]) extends CustomResolvedMigration {
-    def getDescription: String = s"general side effect, version $version"
-
-    def getExecutor: MigrationExecutor = new MigrationExecutor {
-      def executeInTransaction = true
-      def execute(c: Connection) = sideEffects foreach (_(c))
-    }
-
-    def getScript: String = getDescription
-  }
-
-  object VersionedSideEffect {
-    def withConnection(version: String, sideEffects: (Connection => Unit)*) =
-      new VersionedSideEffect(version, sideEffects)
-
-    def withSession(version: String, sideEffects: (JdbcBackend#Session => Unit)*) =
-      new VersionedSideEffect(version, sideEffects map { f =>
-        (c: Connection) => f(new UnmanagedSession(c))
-      })
   }
 
   object Resolver {

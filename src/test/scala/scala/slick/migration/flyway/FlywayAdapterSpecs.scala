@@ -71,29 +71,33 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
     "apply general side effects via a flyway object" in {
       val db = DBWrap("side_effect_migrate")
       import db._
-      
-      def slickMigrationToSideEffect(m: Migration) = (c: Connection) => {
-        m.apply()(new UnmanagedSession(c))
+
+      val m1 = sideEffect { implicit s =>
+        TableMigration(testTable)
+          .create
+          .addColumns(_.col1, _.col2)
+          .apply()
       }
 
-      val m1 = TableMigration(testTable)
-        .create
-        .addColumns(_.col1, _.col2)
+      val m2 = sideEffect { implicit s =>
+        SqlMigration("insert into testtable (col1, col2) values (1, 2)")
+          .apply()
+      }
 
-      val m2 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
+      val migration1 = VersionedMigration("1", m1, m2)
 
-      val migration1 = VersionedSideEffect.withConnection("1", 
-          slickMigrationToSideEffect(m1), 
-          slickMigrationToSideEffect(m2))
+      val m3 = sideEffect { implicit s =>
+        TableMigration(testTable)
+          .addColumns(_.col3)
+          .apply()
+      }
 
-      val m3 = TableMigration(testTable)
-        .addColumns(_.col3)
+      val m4 = sideEffect { implicit s =>
+        SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
+          .apply()
+      }
 
-      val m4 = SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
-
-      val migration2 = VersionedSideEffect.withConnection("2", 
-          slickMigrationToSideEffect(m3), 
-          slickMigrationToSideEffect(m4))
+      val migration2 = VersionedMigration("2", m3, m4)
 
       val flyway = new Flyway()
       flyway.setDataSource(dbAddress, "", "")
