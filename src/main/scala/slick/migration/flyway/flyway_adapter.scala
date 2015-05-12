@@ -1,4 +1,5 @@
-package flygration
+package scala.slick
+package migration
 
 import java.sql.Connection
 import org.flywaydb.core.api._
@@ -8,7 +9,7 @@ import scala.slick.jdbc.UnmanagedSession
 import scala.collection.JavaConverters._
 import org.flywaydb.core.Flyway
 
-/** The flygration package is an adapter between the `Flyway` database migration tool,
+/** The `slick.migration.flyway` package is an adapter between the `Flyway` database migration tool,
  *  and the `slick-migration-api` library.
  *  
  *  The [[SlickMigrationFlywayAdapter]] class adds an implicit method that allows
@@ -35,7 +36,7 @@ import org.flywaydb.core.Flyway
  * (Note that we must use `setLocations()` in order to to avoid searching 
  * for migrations in the default locations)
  */
-package object flygration {
+package object flyway {
   /** Provides a method to append [[VersionedMigration]]s to a [[Flyway]] object. */
   implicit class SlickMigrationFlywayAdapter(flyway: Flyway) {
     /** Appends the given [[VersionedMigration]]s to the wrapped [[Flyway]] object.
@@ -85,10 +86,12 @@ package object flygration {
   }
 }
 
-/** Wraps one or more [[scala.slick.migration.api.Migration]] objects with a version string. */
-case class VersionedMigration(version: String, migrations: Migration*)
+package flyway {
+  /** Wraps one or more [[scala.slick.migration.api.Migration]] objects with a version string. */
+  case class VersionedMigration(version: String, migrations: Migration*)
 
-object VersionedMigration {
-  def apply(version: Int, migrations: Migration*): VersionedMigration = 
-    VersionedMigration(version.toString, migrations: _*)
+  object VersionedMigration {
+    def apply(version: Int, migrations: Migration*): VersionedMigration =
+      VersionedMigration(version.toString, migrations: _*)
+  }
 }

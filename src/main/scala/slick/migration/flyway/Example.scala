@@ -1,11 +1,12 @@
-package flygration
+package scala.slick
+package migration.flyway
+
 
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.migration.api._
-import flygration._
 import org.flywaydb.core.Flyway
 
-/** An example usage of the `flygration` package. */
+/** An example usage of the `slick.migration.flyway` package. */
 object Example extends App {
   class TestTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "TESTTABLE") {
     def col1 = column[Int]("COL1")
