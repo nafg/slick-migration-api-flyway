@@ -14,7 +14,7 @@ libraryDependencies += "com.h2database" % "h2" % "1.4.187" % "test"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 
-resolvers += "1on1 bintray" at "http://dl.bintray.com/1on1development/maven"
+resolvers += "nafg bintray" at "http://dl.bintray.com/naftoligug/maven"
 
 credentials ++= sys.env.get("BINTRAYKEY").toSeq.map(Credentials(
   "Bintray API Realm",
@@ -22,3 +22,5 @@ credentials ++= sys.env.get("BINTRAYKEY").toSeq.map(Credentials(
   "naftoligug",
   _
 ))
+
+publishTo := Some("slick-migration-api-flyway @ bintray" at "https://api.bintray.com/maven/1on1development/maven/slick-migration-api-flyway")
