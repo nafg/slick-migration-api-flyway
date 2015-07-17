@@ -68,6 +68,45 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
       tableContents() shouldEqual List((1, 2, 3), (10, 20, 30))
     }
 
+    "progressively apply slick migrations via flyway objects" in {
+      val db = DBWrap("slick_step_migrate")
+      import db._
+
+      val m1 = TableMigration(testTable)
+        .create
+        .addColumns(_.col1, _.col2)
+
+      val m2 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
+
+      val migration1 = VersionedMigration("1", m1, m2)
+
+      val m3 = TableMigration(testTable)
+        .addColumns(_.col3)
+
+      val m4 = SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
+
+      val migration2 = VersionedMigration("2", m3, m4)
+
+      val flyway1 = new Flyway()
+      flyway1.setDataSource(dbAddress, "", "")
+      flyway1.setLocations()
+
+      tableExists() shouldBe false
+
+      flyway1.setResolvers(Resolver(migration1))
+      flyway1 migrate()
+
+      val flyway2 = new Flyway()
+      flyway2.setDataSource(dbAddress, "", "")
+      flyway2.setLocations()
+
+      flyway2.setResolvers(Resolver(migration1, migration2))
+      flyway2.migrate()
+
+      tableExists() shouldBe true
+      tableContents() shouldEqual List((1, 2, 3), (10, 20, 30))
+    }
+
     "apply general side effects via a flyway object" in {
       val db = DBWrap("side_effect_migrate")
       import db._
