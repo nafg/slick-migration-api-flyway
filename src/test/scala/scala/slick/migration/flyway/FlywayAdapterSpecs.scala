@@ -72,20 +72,17 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
       val db = DBWrap("slick_step_migrate")
       import db._
 
-      val m1 = TableMigration(testTable)
+      val threeColumns = TableMigration(testTable)
         .create
-        .addColumns(_.col1, _.col2)
+        .addColumns(_.col1, _.col2, _.col3)
 
-      val m2 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
+      val dataLine1 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
 
-      val migration1 = VersionedMigration("1", m1, m2)
+      val addThreeColumnsAnd1RowOfData = VersionedMigration("1", threeColumns, dataLine1)
 
-      val m3 = TableMigration(testTable)
-        .addColumns(_.col3)
+      val dataLine2 = SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
 
-      val m4 = SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
-
-      val migration2 = VersionedMigration("2", m3, m4)
+      val addnotherRow = VersionedMigration("2", dataLine2)
 
       val flyway1 = new Flyway()
       flyway1.setDataSource(dbAddress, "", "")
@@ -93,14 +90,17 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
 
       tableExists() shouldBe false
 
-      flyway1.setResolvers(Resolver(migration1))
+      flyway1.setResolvers(Resolver(addThreeColumnsAnd1RowOfData))
       flyway1 migrate()
+
+      tableExists() shouldBe true
+      tableContents() shouldEqual List((1, 2, 3))
 
       val flyway2 = new Flyway()
       flyway2.setDataSource(dbAddress, "", "")
       flyway2.setLocations()
 
-      flyway2.setResolvers(Resolver(migration1, migration2))
+      flyway2.setResolvers(Resolver(addThreeColumnsAnd1RowOfData, addnotherRow))
       flyway2.migrate()
 
       tableExists() shouldBe true
