@@ -6,7 +6,7 @@ name := "slick-migration-api-flyway"
 
 version := "0.2-SNAPSHOT"
 
-libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.1.1"
+libraryDependencies += "io.github.nafg" %% "slick-migration-api_slick30" % "0.3.0"
 
 libraryDependencies += "org.flywaydb" % "flyway-core" % "4.0.3"
 

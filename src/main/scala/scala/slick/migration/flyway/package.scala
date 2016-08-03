@@ -1,14 +1,11 @@
 package scala.slick
 package migration
 
-import scala.slick.jdbc.JdbcBackend
-import scala.slick.migration.api._
-
 
 /** The `slick.migration.flyway` package is an adapter between the `Flyway` database migration tool,
   * and the `slick-migration-api` library.
   *
-  * One can aggregate [[scala.slick.migration.api.Migration]]s into [[scala.slick.migration.flyway.VersionedMigration]]
+  * One can aggregate [[slick.migration.api.Migration]]s into [[scala.slick.migration.flyway.VersionedMigration]]
   * objects and then pass them to `Flyway` as follows:
   * {{{
   *  import scala.slick.migration.flyway._
@@ -40,11 +37,4 @@ import scala.slick.migration.api._
   *  val m: Migration = sideEffect { implicit session => ... }
   * }}}
   */
-package object flyway {
-  /** Converts a side effecting action that requires a session into a migration. */
-  def sideEffect(eff: => (JdbcBackend#Session => Unit)) = new Migration {
-    def apply()(implicit session: JdbcBackend#Session) = {
-      eff(session)
-    }
-  }
-}
+package object flyway

@@ -2,11 +2,11 @@ package scala.slick.migration.flyway
 
 import java.sql.Connection
 
-import scala.slick.jdbc.UnmanagedSession
-import scala.slick.migration.api.{Migration, SqlMigration, TableMigration}
+import slick.dbio.DBIO
+import slick.migration.api.{Migration, SqlMigration, TableMigration}
 
-import org.flywaydb.core.api.{MigrationType, MigrationVersion}
 import org.flywaydb.core.api.resolver.{MigrationExecutor, ResolvedMigration}
+import org.flywaydb.core.api.{MigrationType, MigrationVersion}
 
 
 object VersionedMigration {
@@ -14,7 +14,7 @@ object VersionedMigration {
     VersionedMigration(version.toString, migrations: _*)
 }
 
-/** Wraps one or more [[scala.slick.migration.api.Migration]] objects with a version string. */
+/** Wraps one or more [[slick.migration.api.Migration]] objects with a version string. */
 case class VersionedMigration(version: String, migrations: Migration*) extends ResolvedMigration {
 
   def getDescription: String = {
@@ -27,7 +27,10 @@ case class VersionedMigration(version: String, migrations: Migration*) extends R
   def getExecutor: MigrationExecutor = new MigrationExecutor {
     def executeInTransaction = true
 
-    def execute(c: Connection) = migrations foreach (_.apply()(new UnmanagedSession(c)))
+    def execute(c: Connection) = {
+      val db = new UnmanagedDatabase(c)
+      db.run(DBIO.sequence(migrations.map(_.apply())))
+    }
   }
 
   def getScript: String = migrations.map {

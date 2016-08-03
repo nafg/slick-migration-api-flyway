@@ -1,20 +1,26 @@
 package scala.slick
 package migration.flyway
 
-import org.scalatest.{ FreeSpec, Matchers }
-import scala.slick.driver.H2Driver.simple._
-import scala.slick.migration.api._
-import org.flywaydb.core.Flyway
-import scala.slick.jdbc.meta.MTable
-import java.sql.Connection
-import scala.slick.jdbc.UnmanagedSession
+import scala.concurrent.ExecutionContext
 
-class FlywayAdapterSpecs extends FreeSpec with Matchers {
+import slick.driver.H2Driver.api._
+import slick.jdbc.meta.MTable
+import slick.migration.api.{H2Dialect, SqlMigration, TableMigration}
+
+import org.flywaydb.core.Flyway
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.{FreeSpec, Matchers}
+
+
+class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures {
   // note, not using capital letters in the table/column names breaks the test
   class TestTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "TESTTABLE") {
     def col1 = column[Int]("COL1")
+
     def col2 = column[Int]("COL2")
+
     def col3 = column[Int]("COL3", O.Default(3))
+
     def * = (col1, col2, col3)
   }
 
@@ -26,13 +32,14 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
     val dbAddress = s"jdbc:h2:mem:$name;DB_CLOSE_DELAY=-1"
     val database = Database.forURL(dbAddress, driver = "org.h2.Driver")
 
-    def tableExists() = database withSession { implicit s =>
-      !MTable.getTables(testTable.baseTableRow.tableName).list.isEmpty
-    }
-    def tableContents() = database withSession {
-      implicit s => testTable.list
-    }
+    def tableExists(implicit executionContext: ExecutionContext) = database.run(MTable.getTables(testTable.baseTableRow.tableName).map(_.nonEmpty))
+
+    def tableContents = database.run(testTable.result)
   }
+
+
+  import ExecutionContext.Implicits.global
+
 
   "The flyway/slick migrations adapter" - {
     "apply slick migrations via a flyway object" in {
@@ -60,12 +67,12 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
 
       flyway.setResolvers(Resolver(migration1, migration2))
 
-      tableExists() shouldBe false
+      tableExists.futureValue shouldBe false
 
       flyway.migrate()
 
-      tableExists() shouldBe true
-      tableContents() shouldEqual List((1, 2, 3), (10, 20, 30))
+      tableExists.futureValue shouldBe true
+      tableContents.futureValue shouldEqual List((1, 2, 3), (10, 20, 30))
     }
 
     "progressively apply slick migrations via flyway objects" in {
@@ -88,13 +95,13 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
       flyway1.setDataSource(dbAddress, "", "")
       flyway1.setLocations()
 
-      tableExists() shouldBe false
+      tableExists.futureValue shouldBe false
 
       flyway1.setResolvers(Resolver(addThreeColumnsAnd1RowOfData))
       flyway1 migrate()
 
-      tableExists() shouldBe true
-      tableContents() shouldEqual List((1, 2, 3))
+      tableExists.futureValue shouldBe true
+      tableContents.futureValue shouldEqual List((1, 2, 3))
 
       val flyway2 = new Flyway()
       flyway2.setDataSource(dbAddress, "", "")
@@ -103,53 +110,8 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers {
       flyway2.setResolvers(Resolver(addThreeColumnsAnd1RowOfData, addnotherRow))
       flyway2.migrate()
 
-      tableExists() shouldBe true
-      tableContents() shouldEqual List((1, 2, 3), (10, 20, 30))
-    }
-
-    "apply general side effects via a flyway object" in {
-      val db = DBWrap("side_effect_migrate")
-      import db._
-
-      val m1 = sideEffect { implicit s =>
-        TableMigration(testTable)
-          .create
-          .addColumns(_.col1, _.col2)
-          .apply()
-      }
-
-      val m2 = sideEffect { implicit s =>
-        SqlMigration("insert into testtable (col1, col2) values (1, 2)")
-          .apply()
-      }
-
-      val migration1 = VersionedMigration("1", m1, m2)
-
-      val m3 = sideEffect { implicit s =>
-        TableMigration(testTable)
-          .addColumns(_.col3)
-          .apply()
-      }
-
-      val m4 = sideEffect { implicit s =>
-        SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
-          .apply()
-      }
-
-      val migration2 = VersionedMigration("2", m3, m4)
-
-      val flyway = new Flyway()
-      flyway.setDataSource(dbAddress, "", "")
-      flyway.setLocations()
-
-      flyway.setResolvers(Resolver(migration1, migration2))
-
-      tableExists() shouldBe false
-
-      flyway.migrate()
-
-      tableExists() shouldBe true
-      tableContents() shouldEqual List((1, 2, 3), (10, 20, 30))
+      tableExists.futureValue shouldBe true
+      tableContents.futureValue shouldEqual List((1, 2, 3), (10, 20, 30))
     }
   }
 }
