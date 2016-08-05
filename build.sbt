@@ -4,7 +4,7 @@ organization := "com.1on1development"
 
 name := "slick-migration-api-flyway"
 
-version := "0.2-SNAPSHOT"
+version := "0.2"
 
 libraryDependencies += "io.github.nafg" %% "slick-migration-api_slick30" % "0.3.0"
 

@@ -2,6 +2,9 @@ package scala.slick.migration.flyway
 
 import java.sql.Connection
 
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
+
 import slick.dbio.DBIO
 import slick.migration.api.{Migration, SqlMigration, TableMigration}
 
@@ -28,8 +31,9 @@ case class VersionedMigration(version: String, migrations: Migration*) extends R
     def executeInTransaction = true
 
     def execute(c: Connection) = {
+      val action = DBIO.sequence(migrations.map(_.apply()))
       val db = new UnmanagedDatabase(c)
-      db.run(DBIO.sequence(migrations.map(_.apply())))
+      Await.result(db.run(action), Duration.Inf)
     }
   }
 

@@ -8,11 +8,12 @@ import slick.jdbc.meta.MTable
 import slick.migration.api.{H2Dialect, SqlMigration, TableMigration}
 
 import org.flywaydb.core.Flyway
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{FreeSpec, Matchers}
 
 
-class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures {
+class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with IntegrationPatience {
+
   // note, not using capital letters in the table/column names breaks the test
   class TestTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "TESTTABLE") {
     def col1 = column[Int]("COL1")
@@ -32,7 +33,8 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures {
     val dbAddress = s"jdbc:h2:mem:$name;DB_CLOSE_DELAY=-1"
     val database = Database.forURL(dbAddress, driver = "org.h2.Driver")
 
-    def tableExists(implicit executionContext: ExecutionContext) = database.run(MTable.getTables(testTable.baseTableRow.tableName).map(_.nonEmpty))
+    def tableExists(implicit executionContext: ExecutionContext) =
+      database.run(MTable.getTables(testTable.baseTableRow.tableName).map(_.nonEmpty))
 
     def tableContents = database.run(testTable.result)
   }
