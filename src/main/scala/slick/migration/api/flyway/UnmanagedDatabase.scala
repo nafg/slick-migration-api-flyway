@@ -8,9 +8,9 @@ import slick.util.AsyncExecutor
 
 
 class UnmanagedJdbcDataSource(conn: Connection) extends JdbcDataSource {
-  def createConnection() = conn
-
-  def close() = ()
+  override def createConnection() = conn
+  override def close() = ()
+  override val maxConnections = None
 }
 
 class UnmanagedSession(database: DatabaseDef) extends BaseSession(database) {

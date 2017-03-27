@@ -1,12 +1,16 @@
 scalaVersion := "2.11.8"
 
+crossScalaVersions := Seq("2.11.8", "2.12.1")
+
 organization := "com.1on1development"
 
 name := "slick-migration-api-flyway"
 
-version := "0.3"
+version := "0.4"
 
-libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.3.0"
+scalacOptions += "-deprecation"
+
+libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.4.0"
 
 libraryDependencies += "org.flywaydb" % "flyway-core" % "4.1.2"
 

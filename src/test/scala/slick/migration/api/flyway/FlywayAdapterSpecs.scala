@@ -2,7 +2,7 @@ package slick.migration.api.flyway
 
 import scala.concurrent.ExecutionContext
 
-import slick.driver.H2Driver.api._
+import slick.jdbc.H2Profile.api._
 import slick.jdbc.meta.MTable
 import slick.migration.api.{H2Dialect, SqlMigration, TableMigration}
 
