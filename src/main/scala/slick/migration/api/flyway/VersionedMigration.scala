@@ -1,4 +1,4 @@
-package scala.slick.migration.flyway
+package slick.migration.api.flyway
 
 import java.sql.Connection
 

@@ -1,11 +1,12 @@
-package scala.slick
-package migration
+package slick.migration.api
+
+import slick.migration.api.flyway.VersionedMigration
 
 
 /** The `slick.migration.flyway` package is an adapter between the `Flyway` database migration tool,
   * and the `slick-migration-api` library.
   *
-  * One can aggregate [[slick.migration.api.Migration]]s into [[scala.slick.migration.flyway.VersionedMigration]]
+  * One can aggregate [[slick.migration.api.Migration]]s into [[VersionedMigration]]
   * objects and then pass them to `Flyway` as follows:
   * {{{
   *  import scala.slick.migration.flyway._

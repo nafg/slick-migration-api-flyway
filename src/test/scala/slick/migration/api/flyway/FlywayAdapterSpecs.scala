@@ -1,5 +1,4 @@
-package scala.slick
-package migration.flyway
+package slick.migration.api.flyway
 
 import scala.concurrent.ExecutionContext
 

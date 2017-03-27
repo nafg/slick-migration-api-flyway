@@ -4,15 +4,15 @@ organization := "com.1on1development"
 
 name := "slick-migration-api-flyway"
 
-version := "0.2"
+version := "0.3"
 
-libraryDependencies += "io.github.nafg" %% "slick-migration-api_slick30" % "0.3.0"
+libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.3.0"
 
-libraryDependencies += "org.flywaydb" % "flyway-core" % "4.0.3"
+libraryDependencies += "org.flywaydb" % "flyway-core" % "4.1.2"
 
-libraryDependencies += "com.h2database" % "h2" % "1.4.192" % "test"
+libraryDependencies += "com.h2database" % "h2" % "1.4.194" % "test"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 
 resolvers += "nafg bintray" at "http://dl.bintray.com/naftoligug/maven"
 
