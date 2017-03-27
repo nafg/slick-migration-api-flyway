@@ -28,10 +28,3 @@ flyway.migrate()
 ```
 (Note that we must use `setLocations()` in order to to avoid searching
 for migrations in the default locations)
-
-It is possible to convert general side effecting actions into a migration,
-for example:
-```scala
-import scala.slick.migration.flyway._
-val m: Migration = sideEffect { implicit session => ... }
-```
