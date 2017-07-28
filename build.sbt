@@ -1,24 +1,24 @@
 scalaVersion := "2.11.8"
 
-crossScalaVersions := Seq("2.11.8", "2.12.1")
+crossScalaVersions := Seq("2.11.11", "2.12.3")
 
 organization := "com.1on1development"
 
 name := "slick-migration-api-flyway"
 
-version := "0.4"
+version := "0.4.1"
 
 scalacOptions += "-deprecation"
 
-libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.4.0"
+libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.4.1"
 
-libraryDependencies += "org.flywaydb" % "flyway-core" % "4.1.2"
+libraryDependencies += "org.flywaydb" % "flyway-core" % "4.2.0"
 
-libraryDependencies += "com.h2database" % "h2" % "1.4.194" % "test"
+libraryDependencies += "com.h2database" % "h2" % "1.4.196" % "test"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.3" % "test"
 
-resolvers += "nafg bintray" at "http://dl.bintray.com/naftoligug/maven"
+resolvers += Resolver.jcenterRepo
 
 credentials ++= sys.env.get("BINTRAYKEY").toSeq.map(Credentials(
   "Bintray API Realm",
