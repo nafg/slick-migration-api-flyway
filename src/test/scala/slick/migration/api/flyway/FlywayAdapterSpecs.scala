@@ -62,11 +62,12 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
 
       val migration2 = VersionedMigration("2", m3, m4)
 
-      val flyway = new Flyway()
-      flyway.setDataSource(dbAddress, "", "")
-      flyway.setLocations()
-
-      flyway.setResolvers(Resolver(migration1, migration2))
+      val flyway =
+        Flyway.configure()
+          .dataSource(dbAddress, "", "")
+          .locations(Seq.empty[String]: _*)
+          .resolvers(Resolver(migration1, migration2))
+          .load()
 
       tableExists.futureValue shouldBe false
 
@@ -92,23 +93,27 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
 
       val addnotherRow = VersionedMigration("2", dataLine2)
 
-      val flyway1 = new Flyway()
-      flyway1.setDataSource(dbAddress, "", "")
-      flyway1.setLocations()
-
       tableExists.futureValue shouldBe false
 
-      flyway1.setResolvers(Resolver(addThreeColumnsAnd1RowOfData))
+      val flyway1 =
+        Flyway.configure()
+          .dataSource(dbAddress, "", "")
+          .locations(Seq.empty[String]: _*)
+          .resolvers(Resolver(addThreeColumnsAnd1RowOfData))
+          .load()
+
       flyway1 migrate()
 
       tableExists.futureValue shouldBe true
       tableContents.futureValue shouldEqual List((1, 2, 3))
 
-      val flyway2 = new Flyway()
-      flyway2.setDataSource(dbAddress, "", "")
-      flyway2.setLocations()
+      val flyway2 =
+        Flyway.configure()
+          .dataSource(dbAddress, "", "")
+          .locations(Seq.empty[String]: _*)
+          .resolvers(Resolver(addThreeColumnsAnd1RowOfData, addnotherRow))
+          .load()
 
-      flyway2.setResolvers(Resolver(addThreeColumnsAnd1RowOfData, addnotherRow))
       flyway2.migrate()
 
       tableExists.futureValue shouldBe true

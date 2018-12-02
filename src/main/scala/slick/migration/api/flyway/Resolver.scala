@@ -3,7 +3,7 @@ package slick.migration.api.flyway
 import scala.collection.JavaConverters._
 
 import org.flywaydb.core.Flyway
-import org.flywaydb.core.api.resolver.{MigrationResolver, ResolvedMigration}
+import org.flywaydb.core.api.resolver.{Context, MigrationResolver, ResolvedMigration}
 
 
 object Resolver {
@@ -11,6 +11,6 @@ object Resolver {
     * This should be used in conjunction with the [[Flyway#setResolvers]] method.
     */
   def apply(migrations: ResolvedMigration*) = new MigrationResolver {
-    def resolveMigrations = migrations.asJava
+    override def resolveMigrations(context: Context) = migrations.asJava
   }
 }

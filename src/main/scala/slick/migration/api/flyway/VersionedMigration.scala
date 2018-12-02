@@ -1,14 +1,13 @@
 package slick.migration.api.flyway
 
-import java.sql.Connection
-
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
 import slick.dbio.DBIO
 import slick.migration.api.{Migration, SqlMigration, TableMigration}
 
-import org.flywaydb.core.api.resolver.{MigrationExecutor, ResolvedMigration}
+import org.flywaydb.core.api.executor.{Context, MigrationExecutor}
+import org.flywaydb.core.api.resolver.ResolvedMigration
 import org.flywaydb.core.api.{MigrationType, MigrationVersion}
 
 
@@ -28,11 +27,11 @@ case class VersionedMigration(version: String, migrations: Migration*) extends R
   }
 
   def getExecutor: MigrationExecutor = new MigrationExecutor {
-    def executeInTransaction = true
+    override def canExecuteInTransaction = true
 
-    def execute(c: Connection) = {
+    override def execute(context: Context): Unit = {
       val action = DBIO.sequence(migrations.map(_.apply()))
-      val db = new UnmanagedDatabase(c)
+      val db = new UnmanagedDatabase(context.getConnection)
       Await.result(db.run(action), Duration.Inf)
     }
   }
