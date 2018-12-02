@@ -2,7 +2,7 @@ scalaVersion := "2.12.7"
 
 crossScalaVersions := Seq("2.11.12", "2.12.7")
 
-organization := "com.1on1development"
+organization := "io.github.nafg"
 
 name := "slick-migration-api-flyway"
 
