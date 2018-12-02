@@ -27,4 +27,4 @@ credentials ++= sys.env.get("BINTRAYKEY").toSeq.map(Credentials(
   _
 ))
 
-publishTo := Some("slick-migration-api-flyway @ bintray" at "https://api.bintray.com/maven/1on1development/maven/slick-migration-api-flyway")
+publishTo := Some("slick-migration-api-flyway @ bintray" at "https://api.bintray.com/maven/naftoligug/maven/slick-migration-api-flyway")
