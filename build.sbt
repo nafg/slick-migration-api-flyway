@@ -6,13 +6,13 @@ organization := "io.github.nafg"
 
 name := "slick-migration-api-flyway"
 
-version := "0.5.0"
+version := "0.5.1"
 
 scalacOptions += "-deprecation"
 
 libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.4.4"
 
-libraryDependencies += "org.flywaydb" % "flyway-core" % "5.2.3"
+libraryDependencies += "org.flywaydb" % "flyway-core" % "5.2.4"
 
 libraryDependencies += "com.h2database" % "h2" % "1.4.197" % "test"
 
