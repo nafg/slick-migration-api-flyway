@@ -66,7 +66,7 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
         Flyway.configure()
           .dataSource(dbAddress, "", "")
           .locations(Seq.empty[String]: _*)
-          .resolvers(Resolver(migration1, migration2))
+          .resolvers(ExplicitMigrationResolver(migration1, migration2))
           .load()
 
       tableExists.futureValue shouldBe false
@@ -99,7 +99,7 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
         Flyway.configure()
           .dataSource(dbAddress, "", "")
           .locations(Seq.empty[String]: _*)
-          .resolvers(Resolver(addThreeColumnsAnd1RowOfData))
+          .resolvers(ExplicitMigrationResolver(addThreeColumnsAnd1RowOfData))
           .load()
 
       flyway1 migrate()
@@ -111,7 +111,7 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
         Flyway.configure()
           .dataSource(dbAddress, "", "")
           .locations(Seq.empty[String]: _*)
-          .resolvers(Resolver(addThreeColumnsAnd1RowOfData, addnotherRow))
+          .resolvers(ExplicitMigrationResolver(addThreeColumnsAnd1RowOfData, addnotherRow))
           .load()
 
       flyway2.migrate()

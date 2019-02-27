@@ -1,16 +1,12 @@
 package slick.migration.api.flyway
 
-import scala.collection.JavaConverters._
-
-import org.flywaydb.core.Flyway
-import org.flywaydb.core.api.resolver.{Context, MigrationResolver, ResolvedMigration}
+import org.flywaydb.core.api.resolver.{MigrationResolver, ResolvedMigration}
 
 
 object Resolver {
   /** Converts a list of [[ResolvedMigration]]s into a [[MigrationResolver]].
-    * This should be used in conjunction with the [[Flyway#setResolvers]] method.
-    */
-  def apply(migrations: ResolvedMigration*) = new MigrationResolver {
-    override def resolveMigrations(context: Context) = migrations.asJava
-  }
+   * This should be used in conjunction with the [[org.flywaydb.core.api.configuration.FluentConfiguration#resolvers]] method.
+   */
+  @deprecated("Use ExplicitMigrationResolver", "0.6.0")
+  def apply(migrations: ResolvedMigration*) = ExplicitMigrationResolver(migrations: _*)
 }
