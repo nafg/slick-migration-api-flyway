@@ -26,7 +26,7 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
 
   val testTable = TableQuery[TestTable]
 
-  implicit val dialect = new H2Dialect
+  implicit val dialect: H2Dialect = new H2Dialect
 
   case class DBWrap(name: String) {
     val dbAddress = s"jdbc:h2:mem:$name;DB_CLOSE_DELAY=-1"
