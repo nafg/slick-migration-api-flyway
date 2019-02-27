@@ -16,7 +16,7 @@ object VersionedMigration {
     VersionedMigration(version.toString, migrations: _*)
 }
 
-/** Wraps one or more [[slick.migration.api.Migration]] objects with a version string. */
+/** Wraps one or more `slick.migration.api.Migration` objects with a version string */
 case class VersionedMigration(version: String, migrations: Migration*) extends ResolvedMigration {
 
   def getDescription: String = {
