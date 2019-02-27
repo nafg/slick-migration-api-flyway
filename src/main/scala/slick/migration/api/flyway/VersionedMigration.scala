@@ -21,8 +21,8 @@ case class VersionedMigration(version: String, migrations: Migration*) extends R
 
   def getDescription: String = {
     migrations.map {
-      case m: TableMigration[_] => s"TableMigration(${m.tableInfo.tableName})"
-      case other                => other.getClass.getName
+      case m: TableMigration[_, _] => s"TableMigration(${m.tableInfo.tableName})"
+      case other                   => other.getClass.getName
     }.mkString("\n")
   }
 
@@ -37,9 +37,9 @@ case class VersionedMigration(version: String, migrations: Migration*) extends R
   }
 
   def getScript: String = migrations.map {
-    case m: TableMigration[_] => m.toString
-    case m: SqlMigration      => s"SqlMigration{${m.sql.mkString(";")};}"
-    case _                    => "<< slick-migration-api >>"
+    case m: TableMigration[_, _] => m.toString
+    case m: SqlMigration         => s"SqlMigration{${m.sql.mkString(";")};}"
+    case _                       => "<< slick-migration-api >>"
   }.mkString("\n")
 
   def getChecksum = null
