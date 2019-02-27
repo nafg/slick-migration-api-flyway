@@ -22,6 +22,8 @@ class TestTable(tag: Tag) extends Table[(Int, Int)](tag, "testtable") {
 }
 val testTable = TableQuery[TestTable]
 
+implicit val dialect: H2Dialect = new H2Dialect
+
 val m1 = TableMigration(testTable)
   .create
   .addColumns(_.col1, _.col2)
@@ -31,13 +33,8 @@ val m2 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
 val migration = VersionedMigration("1", m1, m2)
 
 val flyway =
-  Flyway.configure()
-    .dataSource(db, "", "")
-    .locations(Seq.empty[String]: _*)
-    .resolvers(Resolver(migration))
+  SlickFlyway(db)(Seq(migration))
     .load()
 
 flyway.migrate()
 ```
-(Note that we must clear the locations in order to to avoid searching
-for migrations in the default locations)

@@ -19,11 +19,7 @@ import slick.migration.api.flyway.VersionedMigration
   *
   *  val migration = VersionedMigration("1", m1, m2)
   *
-  *  val flyway = new Flyway()
-  *  flyway.setDataSource(db, "", "")
-  *  flyway.setLocations()
-  *
-  *  flyway.setResolvers(Resolver(migration))
+  *  val flyway = SlickFlyway(database)(Seq(migration)).load()
   *
   *  flyway.migrate()
   * }}}
