@@ -4,7 +4,7 @@ import scala.concurrent.ExecutionContext
 
 import slick.jdbc.H2Profile.api._
 import slick.jdbc.meta.MTable
-import slick.migration.api.{H2Dialect, SqlMigration, TableMigration}
+import slick.migration.api.{H2Dialect, Migration, SqlMigration, TableMigration}
 
 import org.flywaydb.core.Flyway
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -12,6 +12,7 @@ import org.scalatest.{FreeSpec, Matchers}
 
 
 class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with IntegrationPatience {
+  implicit def infoProvider: MigrationInfo.Provider[Migration] = MigrationInfo.Provider.strict
 
   // note, not using capital letters in the table/column names breaks the test
   class TestTable(tag: Tag) extends Table[(Int, Int, Int)](tag, "TESTTABLE") {
@@ -53,14 +54,14 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
 
       val m2 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
 
-      val migration1 = VersionedMigration("1", m1, m2)
+      val migration1 = VersionedMigration("1", m1 & m2)
 
       val m3 = TableMigration(testTable)
         .addColumns(_.col3)
 
       val m4 = SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
 
-      val migration2 = VersionedMigration("2", m3, m4)
+      val migration2 = VersionedMigration("2", m3 & m4)
 
       val flyway =
         Flyway.configure()
@@ -87,7 +88,7 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
 
       val dataLine1 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
 
-      val addThreeColumnsAnd1RowOfData = VersionedMigration("1", threeColumns, dataLine1)
+      val addThreeColumnsAnd1RowOfData = VersionedMigration("1", threeColumns & dataLine1)
 
       val dataLine2 = SqlMigration("insert into testtable (col1, col2, col3) values (10, 20, 30)")
 

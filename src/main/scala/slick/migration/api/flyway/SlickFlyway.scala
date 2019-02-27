@@ -7,7 +7,7 @@ import org.flywaydb.core.api.configuration.FluentConfiguration
 
 
 object SlickFlyway {
-  def apply(database: JdbcBackend#Database)(migrations: Seq[VersionedMigration]): FluentConfiguration =
+  def apply(database: JdbcBackend#Database)(migrations: Seq[VersionedMigration[_]]): FluentConfiguration =
     Flyway
       .configure()
       .dataSource(new DatabaseDatasource(database))

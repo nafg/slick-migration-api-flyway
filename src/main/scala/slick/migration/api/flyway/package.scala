@@ -17,7 +17,7 @@ import slick.migration.api.flyway.VersionedMigration
   *
   *  val m2 = SqlMigration("insert into testtable (col1, col2) values (1, 2)")
   *
-  *  val migration = VersionedMigration("1", m1, m2)
+  *  val migration = VersionedMigration("1", m1 & m2)
   *
   *  val flyway = SlickFlyway(database)(Seq(migration)).load()
   *
