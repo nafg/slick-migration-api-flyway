@@ -10,7 +10,7 @@ version := "0.5.1-SNAPSHOT"
 
 scalacOptions += "-deprecation"
 
-libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.4.4"
+libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.6.1"
 
 libraryDependencies += "org.flywaydb" % "flyway-core" % "5.2.4"
 
