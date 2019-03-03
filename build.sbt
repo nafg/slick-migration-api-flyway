@@ -6,7 +6,7 @@ organization := "io.github.nafg"
 
 name := "slick-migration-api-flyway"
 
-version := "0.5.1-SNAPSHOT"
+version := "0.6.0"
 
 scalacOptions += "-deprecation"
 
