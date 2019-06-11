@@ -103,7 +103,7 @@ class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with I
           .resolvers(ExplicitMigrationResolver(addThreeColumnsAnd1RowOfData))
           .load()
 
-      flyway1 migrate()
+      flyway1.migrate()
 
       tableExists.futureValue shouldBe true
       tableContents.futureValue shouldEqual List((1, 2, 3))

@@ -1,6 +1,5 @@
-scalaVersion := "2.12.8"
-
-crossScalaVersions := Seq("2.11.12", "2.12.8")
+crossScalaVersions := Seq("2.12.8", "2.13.0")
+scalaVersion := crossScalaVersions.value.last
 
 organization := "io.github.nafg"
 
@@ -10,7 +9,7 @@ version := "0.6.0"
 
 scalacOptions += "-deprecation"
 
-libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.6.1"
+libraryDependencies += "io.github.nafg" %% "slick-migration-api" % "0.7.0"
 
 libraryDependencies += "org.flywaydb" % "flyway-core" % "5.2.4"
 
