@@ -8,10 +8,11 @@ import slick.migration.api.{H2Dialect, Migration, SqlMigration, TableMigration}
 
 import org.flywaydb.core.Flyway
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 
-class FlywayAdapterSpecs extends FreeSpec with Matchers with ScalaFutures with IntegrationPatience {
+class FlywayAdapterSpecs extends AnyFreeSpec with Matchers with ScalaFutures with IntegrationPatience {
   implicit def infoProvider: MigrationInfo.Provider[Migration] = MigrationInfo.Provider.strict
 
   // note, not using capital letters in the table/column names breaks the test
