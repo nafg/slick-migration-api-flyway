@@ -15,7 +15,7 @@ libraryDependencies += "org.flywaydb" % "flyway-core" % "6.2.4"
 
 libraryDependencies += "com.h2database" % "h2" % "1.4.200" % "test"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.1" % "test"
 
 resolvers += Resolver.jcenterRepo
 
