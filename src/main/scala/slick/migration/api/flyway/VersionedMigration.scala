@@ -17,13 +17,11 @@ object VersionedMigration {
 case class VersionedMigration[V](version: V, migration: Migration, info: MigrationInfo)
                                 (implicit toMigrationVersion: ToMigrationVersion[V]) extends ResolvedMigration {
   override def getExecutor: MigrationExecutor = new SlickMigrationExecutor(migration)
-
   override def getDescription: String = info.description
   override def getScript: String = info.script
-  override def getChecksum = info.checksum match {
-    case Some(i) => i
-    case None    => null
-  }
+  override def getChecksum = info.checksum.map(i => i: Integer).orNull
+  override def checksumMatches(checksum: Integer) = getChecksum == checksum
+  override def checksumMatchesWithoutBeingIdentical(checksum: Integer) = getChecksum == checksum
   override def getPhysicalLocation: String = info.location
 
   override def getType: MigrationType = MigrationType.CUSTOM
