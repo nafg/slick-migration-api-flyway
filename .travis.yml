@@ -1,9 +1,0 @@
-language: scala
-jdk:
-  - openjdk8
-script: sbt +test
-deploy:
-  provider: script
-  script: sbt +publish
-  on:
-    tags: true
