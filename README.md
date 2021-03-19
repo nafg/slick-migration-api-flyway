@@ -1,4 +1,4 @@
-![Maven Central](https://img.shields.io/maven-central/v/io.github.nafg.slick-migration-api/slick-migration-api-flyway)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.nafg.slick-migration-api/slick-migration-api-flyway_2.13)
 
 The `slick.migration.api.flyway` package is an adapter between the `Flyway` database migration tool,
 and the `slick-migration-api` library.
