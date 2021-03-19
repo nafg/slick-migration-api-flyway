@@ -88,3 +88,7 @@ src_managed/
 project/boot/
 .history
 .cache
+
+.bloop/
+.bsp/
+.metals
