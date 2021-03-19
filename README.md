@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/nafg/slick-migration-api-flyway.svg?branch=master)](https://travis-ci.org/101dev/slick-migration-api-flyway)
-[ ![Download](https://api.bintray.com/packages/naftoligug/maven/slick-migration-api-flyway/images/download.svg) ](https://bintray.com/naftoligug/maven/slick-migration-api-flyway/_latestVersion)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.nafg.slick-migration-api/slick-migration-api-flyway)
 
 The `slick.migration.flyway` package is an adapter between the `Flyway` database migration tool,
 and the `slick-migration-api` library.
