@@ -1,6 +1,6 @@
 ![Maven Central](https://img.shields.io/maven-central/v/io.github.nafg.slick-migration-api/slick-migration-api-flyway)
 
-The `slick.migration.flyway` package is an adapter between the `Flyway` database migration tool,
+The `slick.migration.api.flyway` package is an adapter between the `Flyway` database migration tool,
 and the `slick-migration-api` library.
 
 One can aggregate`scala.slick.migration.api.Migration`s into`VersionedMigration`
