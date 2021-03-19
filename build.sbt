@@ -6,8 +6,6 @@ inThisBuild(List(
 
 name := "slick-migration-api-flyway"
 
-version := "0.7.0"
-
 scalacOptions += "-deprecation"
 
 libraryDependencies += "io.github.nafg.slick-migration-api" %% "slick-migration-api" % "0.8.2"
