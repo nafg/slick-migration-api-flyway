@@ -9,6 +9,8 @@ import org.flywaydb.core.api.executor.{Context, MigrationExecutor}
 
 
 class SlickMigrationExecutor(migration: Migration) extends MigrationExecutor {
+  override def shouldExecute(): Boolean = true
+
   override def canExecuteInTransaction = true
 
   override def execute(context: Context): Unit = {
