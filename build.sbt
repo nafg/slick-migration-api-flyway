@@ -10,7 +10,7 @@ scalacOptions += "-deprecation"
 
 libraryDependencies += "io.github.nafg.slick-migration-api" %% "slick-migration-api" % "0.8.2"
 
-libraryDependencies += "org.flywaydb" % "flyway-core" % "7.9.2"
+libraryDependencies += "org.flywaydb" % "flyway-core" % "7.10.0"
 
 libraryDependencies += "com.h2database" % "h2" % "1.4.200" % "test"
 
