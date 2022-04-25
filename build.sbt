@@ -14,4 +14,4 @@ libraryDependencies += "org.flywaydb" % "flyway-core" % "8.5.9"
 
 libraryDependencies += "com.h2database" % "h2" % "2.1.212" % "test"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.12" % "test"
