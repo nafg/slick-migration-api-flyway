@@ -2,14 +2,16 @@ package slick.migration.api.flyway
 
 import slick.migration.api.Migration
 
-import org.flywaydb.core.api.MigrationType
+import org.flywaydb.core.api.CoreMigrationType
 import org.flywaydb.core.api.executor.MigrationExecutor
 import org.flywaydb.core.api.resolver.ResolvedMigration
+import org.flywaydb.core.extensibility.MigrationType
 
 
 object VersionedMigration {
   def apply[V: ToMigrationVersion, M <: Migration](version: V, migration: M)
-                                                  (implicit infoProvider: MigrationInfo.Provider[M]): VersionedMigration[V] =
+                                                  (implicit infoProvider: MigrationInfo.Provider[M]
+                                                  ): VersionedMigration[V] =
     VersionedMigration(version, migration, infoProvider.func(migration))
 }
 
@@ -24,7 +26,7 @@ case class VersionedMigration[V](version: V, migration: Migration, info: Migrati
   override def checksumMatchesWithoutBeingIdentical(checksum: Integer) = getChecksum == checksum
   override def getPhysicalLocation: String = info.location
 
-  override def getType: MigrationType = MigrationType.CUSTOM
+  override def getType: MigrationType = CoreMigrationType.CUSTOM
 
   override def getVersion = toMigrationVersion.func(version)
 }
