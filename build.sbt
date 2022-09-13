@@ -8,7 +8,7 @@ name := "slick-migration-api-flyway"
 
 scalacOptions += "-deprecation"
 
-libraryDependencies += "io.github.nafg.slick-migration-api" %% "slick-migration-api" % "0.8.2"
+libraryDependencies += "io.github.nafg.slick-migration-api" %% "slick-migration-api" % "0.9.0"
 
 libraryDependencies += "org.flywaydb" % "flyway-core" % "9.3.0"
 
