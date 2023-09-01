@@ -12,6 +12,6 @@ libraryDependencies += "io.github.nafg.slick-migration-api" %% "slick-migration-
 
 libraryDependencies += "org.flywaydb" % "flyway-core" % "9.22.0"
 
-libraryDependencies += "com.h2database" % "h2" % "2.2.220" % "test"
+libraryDependencies += "com.h2database" % "h2" % "2.2.222" % "test"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test"
