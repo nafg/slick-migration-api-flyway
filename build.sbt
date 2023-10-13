@@ -1,14 +1,14 @@
 inThisBuild(List(
-  crossScalaVersions := Seq("2.12.17", "2.13.10"),
+  crossScalaVersions := Seq("2.12.17", "3.3.1", "2.13.10"),
   scalaVersion := crossScalaVersions.value.last,
   organization := "io.github.nafg.slick-migration-api"
 ))
 
 name := "slick-migration-api-flyway"
 
-scalacOptions += "-deprecation"
+scalacOptions ++= Seq("-feature", "-deprecation", "-Xsource:3")
 
-libraryDependencies += "io.github.nafg.slick-migration-api" %% "slick-migration-api" % "0.9.0"
+libraryDependencies += "io.github.nafg.slick-migration-api" %% "slick-migration-api" % "0.9.0+171-ccfb34ee-SNAPSHOT"
 
 libraryDependencies += "org.flywaydb" % "flyway-core" % "9.22.3"
 
