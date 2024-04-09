@@ -1,5 +1,5 @@
 inThisBuild(List(
-  crossScalaVersions := Seq("2.12.19", "3.3.1", "2.13.12"),
+  crossScalaVersions := Seq("2.12.19", "3.3.1", "2.13.13"),
   scalaVersion := crossScalaVersions.value.last,
   organization := "io.github.nafg.slick-migration-api"
 ))
