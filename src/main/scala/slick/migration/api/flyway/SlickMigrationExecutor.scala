@@ -13,8 +13,9 @@ class SlickMigrationExecutor(migration: Migration) extends MigrationExecutor {
 
   override def canExecuteInTransaction = true
 
-  override def execute(context: Context): Unit = {
+  override def execute(context: Context) = {
     val db = new UnmanagedDatabase(context.getConnection)
     Await.result(db.run(migration()), Duration.Inf)
+    java.util.List.of()
   }
 }
