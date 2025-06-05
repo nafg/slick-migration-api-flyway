@@ -8,7 +8,7 @@ pull_request_rules:
       - or:
           - author=scala-steward
           - author=nafg-scala-steward[bot]
-      - check-success=Build and Test (ubuntu-latest, 3.5.x, temurin@17)
+      - check-success=Build and Test (ubuntu-latest, 3.3.x, temurin@17)
       - check-success=Build and Test (ubuntu-latest, 2.13.x, temurin@17)
     actions:
         queue:
